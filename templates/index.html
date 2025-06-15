@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>To-do List | Get hold of your tasks</title>
+    {{ bootstrap.load_css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://kit.fontawesome.com/5fdfca9a05.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="overlay"></div>
+    <div style="position:fixed;z-index: 20; top:25px; left:25px;">
+        <a href="{{ url_for('home') }}" id="logo" style="text-decoration:none; color:white;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+            </svg>
+        </a>
+    </div>
+    <div id="main" class="d-flex flex-wrap justify-content-center align-items-center">
+        <h1 id="h1">To-do List</h1>
+        <nav class="todos-container-sidebar">
+            <button id="toggle-navbar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="input-container shadow" id="sidebar">
+                <div class="todos-container">
+                    <div style="display:flex;justify-content: space-between;">
+                        <h5>Lists (double-click to edit):</h5>
+                        <div>
+                            <button id="deleteListSidebar"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>                 
+                    <div id="listsListSidebar" class="categories">
+                        {% if lists|length == 0 %}
+                            <div class="category" style="text-align:center; color:gray;">
+                                No lists available. Create a new one!
+                            </div>
+                        {% endif %}
+                        {% for list in lists %}                      
+                            <div class="category" data-id="{{ list.id }}">
+                                <div>
+                                    • {{ list.name }}
+                                </div>                              
+                                <input type="checkbox">
+                            </div>
+                        {% endfor %}                                                                     
+                    </div>
+
+                    <hr>
+                    <div style="display:flex;gap:5px;width:100%">
+                        <input type="text" id="inputListSidebar" placeholder="New List..." maxlength="50">
+                        <button id="newListSidebar">Create</button>
+                    </div>                  
+                    
+                        
+                </div>
+                
+            </div>
+        </nav>
+        <div class="divider">
+            <div class="input-container shadow" id="lists-container">
+                <div class="todos-container">
+                    <div style="display:flex;justify-content: space-between;">
+                        <h5>Lists (double-click to edit):</h5>
+                        <div>
+                            <button id="deleteList"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>                 
+                    <div id="listsList" class="categories">
+                        {% if lists|length == 0 %}
+                            <div class="category" style="text-align:center; color:gray;">
+                                No lists available. Create a new one!
+                            </div>
+                        {% endif %}
+                        {% for list in lists %}                      
+                            <div class="category" data-id="{{ list.id }}">
+                                <div>
+                                    • {{ list.name }}
+                                </div>                              
+                                <input type="checkbox">
+                            </div>
+                        {% endfor %}                                                                     
+                    </div>
+
+                    <hr>
+                    <div style="display:flex;gap:5px;width:100%">
+                        <input type="text" id="inputList" placeholder="New List..." maxlength="50">
+                        <button id="newList">Create</button>
+                    </div>                  
+                    
+                        
+                </div>
+                
+            </div>
+            <div class="input-container shadow" id="tasks-container">
+                <div class="tasks-container">                  
+                    <h3 id="listName">Click on a List to see its tasks!</h3>
+                    <div id="todoList">
+                        
+                    </div>
+                    <div class="add-holder" id="addHolder">
+                        <input type="text" id="taskInput" placeholder="Add a new task..." maxlength="100">
+                        <div class="options-task" id="optionsTask">
+                            <div class="deadline-color">
+                                <input style="cursor:pointer;width:40px" type="color" id="colorPicker" value="#6e2a9b">
+                                <div id="calendarIcon" style="cursor:pointer; position: relative;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
+                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                                    </svg>
+                                </div>
+                                <input type="text" id="deadline" style="display:none;">
+                            </div>
+                            <button>Add</button>
+                        </div>
+                    </div>
+
+                </div>                
+            </div>
+        </div>
+    </div>   
+    {{ bootstrap.load_js() }}
+    <script src="static/index.js" type="text/javascript"></script>
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+</body>
+</html>
