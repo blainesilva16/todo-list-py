@@ -38,7 +38,7 @@ A simple and effective To-Do List application built with Python.
    The main dependencies are:
    - Flask
    - Flask-SQLAlchemy
-   - dotnev
+   - dotenv
    - SQLAlchemy
    - Bootstrap-Flask
    - Flask-Migrate
